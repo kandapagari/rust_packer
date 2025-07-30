@@ -34,7 +34,7 @@ jobs:
       run: maturin build --release
       
     - name: Publish to PyPI
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       env:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       run: maturin publish --username __token__ --password $MATURIN_PASSWORD
