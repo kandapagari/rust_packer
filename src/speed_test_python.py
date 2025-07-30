@@ -8,7 +8,10 @@ def run_test():
     packed_with_rust = packb(original_tensor)
     _ = unpackb(packed_with_rust)
 
+
 if __name__ == "__main__":
     # NOTE: You'll need to save your original Python code to a file
     # named `your_original_packer.py` for this to run.
     run_test()
+
+    # hyperfine 'python src/speed_test_python.py'
