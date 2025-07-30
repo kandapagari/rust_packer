@@ -46,7 +46,7 @@ fn packb(obj: &Bound<'_, PyAny>) -> PyResult<Py<PyBytes>> {
 
     let original_dtype = obj_contiguous.getattr("dtype")?.str()?.to_str()?.replace("torch.", "");
     let obj_final = if original_dtype == "bfloat16" {
-        let torch = PyModule::import_bound(py, "torch")?;
+        let torch = PyModule::import(py, "torch")?;
         let float32_dtype = torch.getattr("float32")?;
         obj_contiguous.call_method1("to", (float32_dtype,))?
     } else {
@@ -72,7 +72,7 @@ fn packb(obj: &Bound<'_, PyAny>) -> PyResult<Py<PyBytes>> {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Serialization error: {}", e))
     })?;
 
-    Ok(PyBytes::new_bound(py, &packed).into())
+    Ok(PyBytes::new(py, &packed).into())
 }
 
 #[pyfunction]
@@ -84,16 +84,16 @@ fn unpackb(bytes: &Bound<'_, PyBytes>) -> PyResult<Py<PyAny>> {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Deserialization error: {}", e))
     })?;
 
-    let np = PyModule::import_bound(py, "numpy")?;
-    let torch = PyModule::import_bound(py, "torch")?;
+    let np = PyModule::import(py, "numpy")?;
+    let torch = PyModule::import(py, "torch")?;
 
-    let kwargs = pyo3::types::PyDict::new_bound(py);
+    let kwargs = pyo3::types::PyDict::new(py);
     kwargs.set_item("dtype", unpacked.dtype)?;
 
     let py_array = np
         .call_method(
             "frombuffer",
-            (PyBytes::new_bound(py, &unpacked.data),),
+            (PyBytes::new(py, &unpacked.data),),
             Some(&kwargs),
         )?
         .call_method("reshape", (unpacked.shape,), None)?

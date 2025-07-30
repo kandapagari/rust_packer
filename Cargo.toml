@@ -1,13 +1,13 @@
 [package]
 name = "rust_packer"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
 # Python bindings
-pyo3 = { version = "0.21.2", features = ["extension-module"] }
+pyo3 = { version = "0.25.1", features = ["extension-module"] }
 # NumPy support for pyo3
-numpy = "0.21.0"
+numpy = "0.25.0"
 # Serialization framework
 serde = { version = "1.0", features = ["derive"] }
 # MessagePack serializer implementation for Serde
