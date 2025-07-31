@@ -34,13 +34,14 @@ jobs:
       run: maturin build --release
       
     - name: Publish to PyPI
-      # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows'
+      if: runner.os != 'Windows'
       env:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      run: |
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          maturin publish --username __token__ --password "$env:MATURIN_PASSWORD"
-        else
-          maturin publish --username __token__ --password $MATURIN_PASSWORD
-        fi
-      shell: bash
+      run: maturin publish --username __token__ --password $MATURIN_PASSWORD
+
+    - name: Publish to PyPI (Windows)
+      # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      if: runner.os == 'Windows'
+      run: maturin publish --username __token__ --password "${env:PYPI_TOKEN}"
+      shell: powershell
