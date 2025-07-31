@@ -37,4 +37,10 @@ jobs:
       # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       env:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      run: maturin publish --username __token__ --password $MATURIN_PASSWORD
+      run: |
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          maturin publish --username __token__ --password "$env:MATURIN_PASSWORD"
+        else
+          maturin publish --username __token__ --password $MATURIN_PASSWORD
+        fi
+      shell: bash
