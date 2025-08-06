@@ -47,3 +47,18 @@ jobs:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       run: uv run maturin publish --username __token__ --password $env:MATURIN_PASSWORD
       shell: pwsh
+
+    - name: Run tests
+      run: uv run task test 
+
+    - name: clean up
+      if: always()
+      run: |
+        echo "Cleaning up..."
+        rm -rf target
+        rm -rf .maturin
+        rm -rf .cache
+        rm -rf .pytest_cache
+        rm -rf .coverage
+        rm -rf .venv
+        echo "Cleanup complete."
