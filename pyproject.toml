@@ -23,9 +23,6 @@ requires = ["maturin>=1.9.3"]
 build-backend = "maturin"
 
 [tool.taskipy.tasks]
-test = "task pytest && task coverage_html && task coverage_xml && task coverage_report"
+test = "task pytest"
 
 pytest = "coverage run --source=src -m pytest --color=yes tests/ -v"
-coverage_html = "coverage html -d ./build/coverage_python -i --skip-empty --omit='*__init__.py' --omit='**/configs/**'"
-coverage_xml = "coverage xml -i --skip-empty --omit='*__init__.py' --omit='**/configs/**'"
-coverage_report = "coverage report --skip-empty --omit='*__init__.py' --omit='**/configs/**' -m"
