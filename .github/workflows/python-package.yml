@@ -30,26 +30,26 @@ jobs:
         
     - name: Install dependencies
       run: |
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        uv sync --python ${{ matrix.python-version }}
+        pip install --upgrade pip
+        pip install -e .
     - name: Build wheel
-      run: uv run maturin build --release
+      run: maturin build --release
       
     - name: Publish to PyPI (Linux and macOS)
       if: startsWith(github.ref, 'refs/tags/v') && matrix.os != 'windows-latest'
       env:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      run: uv run maturin publish --username __token__ --password $MATURIN_PASSWORD
+      run: maturin publish --username __token__ --password $MATURIN_PASSWORD
 
     - name: Publish to PyPI (Windows)
       if: startsWith(github.ref, 'refs/tags/v') && matrix.os == 'windows-latest'
       env:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      run: uv run maturin publish --username __token__ --password $env:MATURIN_PASSWORD
+      run: maturin publish --username __token__ --password $env:MATURIN_PASSWORD
       shell: pwsh
 
     - name: Run tests
-      run: uv run task test 
+      run: task test 
 
     - name: clean up
       if: always()
