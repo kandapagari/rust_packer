@@ -7,17 +7,17 @@ use pyo3::{PyAny, PyResult};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
-struct SerializableTensor {
+pub struct SerializableTensor {
     #[serde(rename = "__torch_tensor__")]
-    is_torch: bool,
-    data: Vec<u8>,
-    dtype: String,
-    shape: Vec<usize>,
-    original_dtype: String,
+    pub is_torch: bool,
+    pub data: Vec<u8>,
+    pub dtype: String,
+    pub shape: Vec<usize>,
+    pub original_dtype: String,
 }
 
 #[pyfunction]
-fn packb(obj: &Bound<'_, PyAny>) -> PyResult<Py<PyBytes>> {
+pub fn packb(obj: &Bound<'_, PyAny>) -> PyResult<Py<PyBytes>> {
     let py: Python<'_> = obj.py();
 
     let binding: Bound<'_, pyo3::types::PyType> = obj.get_type();
@@ -87,7 +87,7 @@ fn packb(obj: &Bound<'_, PyAny>) -> PyResult<Py<PyBytes>> {
 }
 
 #[pyfunction]
-fn unpackb(bytes: &Bound<'_, PyBytes>) -> PyResult<Py<PyAny>> {
+pub fn unpackb(bytes: &Bound<'_, PyBytes>) -> PyResult<Py<PyAny>> {
     let py: Python<'_> = bytes.py();
     let data: &[u8] = bytes.as_bytes();
     let unpacked: SerializableTensor = rmp_serde::from_slice(data).map_err(|e| {
